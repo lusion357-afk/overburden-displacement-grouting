@@ -645,44 +645,25 @@ html[data-theme="dark"] .icon-moon { display: block; }
 .lightbox-prev { left: 22px; }
 .lightbox-next { right: 22px; }
 
-/* ---------- 滚动动画（双向触发 · 多变体 · 交错） ---------- */
+/* ---------- 滚动驱动动画（滚轮进度驱动 · 可倒放 · 多变体 · 交错） ---------- */
 html.js .reveal {
-  opacity: 0;
-  transform: translateY(34px);
-  transition:
-    opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
-    transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
-    clip-path 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
-    filter 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+  --p: 0;
+  opacity: var(--p);
 }
 
-/* 方向 / 形式变体 */
-html.js .reveal[data-reveal="fade"]     { transform: none; }
-html.js .reveal[data-reveal="up"]       { transform: translateY(34px); }
-html.js .reveal[data-reveal="left"]     { transform: translateX(-56px); }
-html.js .reveal[data-reveal="right"]    { transform: translateX(56px); }
-html.js .reveal[data-reveal="grow"]     { transform: scale(0.3) translateY(10px); }          /* 由小变大 */
-html.js .reveal[data-reveal="curtain"]  { transform: none; clip-path: inset(0 50% 0 50%); }  /* 幕帘拉开 */
-html.js .reveal[data-reveal="swoosh"]   { transform: translateX(150px) skewX(-16deg); }      /* 箭头穿梭 */
-html.js .reveal[data-reveal="radiate"]  { transform: scale(0.4); filter: blur(8px); }        /* 发散 */
-html.js .reveal[data-reveal="flip"]     { transform: perspective(900px) rotateX(14deg) translateY(16px); } /* 3D 翻转 */
-
-html.js .reveal.is-visible {
-  opacity: 1;
-  transform: none;
-  clip-path: inset(0);
-  filter: blur(0);
-  transition-delay: var(--d, 0s);
-}
+/* 方向 / 形式变体（由 --p ∈ [0,1] 驱动，随滚动前进或倒放） */
+html.js .reveal[data-reveal="fade"]     { }
+html.js .reveal[data-reveal="up"]       { transform: translateY(calc(34px * (1 - var(--p)))); }
+html.js .reveal[data-reveal="left"]     { transform: translateX(calc(-56px * (1 - var(--p)))); }
+html.js .reveal[data-reveal="right"]    { transform: translateX(calc(56px * (1 - var(--p)))); }
+html.js .reveal[data-reveal="grow"]     { transform: translateY(calc(10px * (1 - var(--p)))) scale(calc(0.3 + 0.7 * var(--p))); }
+html.js .reveal[data-reveal="curtain"]  { clip-path: inset(0 calc(50% * (1 - var(--p))) 0 calc(50% * (1 - var(--p)))); }
+html.js .reveal[data-reveal="swoosh"]   { transform: translateX(calc(150px * (1 - var(--p)))) skewX(calc(-16deg * (1 - var(--p)))); }
+html.js .reveal[data-reveal="radiate"]  { transform: scale(calc(0.4 + 0.6 * var(--p))); filter: blur(calc(8px * (1 - var(--p)))); }
+html.js .reveal[data-reveal="flip"]     { transform: perspective(900px) rotateX(calc(14deg * (1 - var(--p)))) translateY(calc(16px * (1 - var(--p)))); }
 
 @media (prefers-reduced-motion: reduce) {
-  html.js .reveal {
-    opacity: 1 !important;
-    transform: none !important;
-    clip-path: inset(0) !important;
-    filter: none !important;
-    transition: none !important;
-  }
+  html.js .reveal { --p: 1 !important; transform: none !important; clip-path: none !important; filter: none !important; }
   html { scroll-behavior: auto; }
 }
 

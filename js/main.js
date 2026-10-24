@@ -50,12 +50,12 @@
   window.addEventListener('scroll', updateSpy, { passive: true });
   updateSpy();
 
-  /* ---------- 滚动动画（双向触发 · 多变体 · 交错） ---------- */
+  /* ---------- 滚动驱动动画（可倒放 · 多变体 · 交错 + 视差层次） ---------- */
   var revealEls = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
   var variants = ['up', 'left', 'right', 'grow', 'curtain', 'swoosh', 'radiate', 'flip', 'fade'];
 
   revealEls.forEach(function (el) {
-    // 同容器内的 reveal 子项作为一组，用于变体分配与交错延迟
+    // 同容器内的 reveal 子项作为一组，用于变体分配与交错
     var sibs = el.parentElement
       ? Array.prototype.slice.call(el.parentElement.children)
           .filter(function (c) { return c.classList.contains('reveal'); })
@@ -66,20 +66,50 @@
     if (!el.hasAttribute('data-reveal')) {
       el.setAttribute('data-reveal', variants[idx % variants.length]);
     }
-    // 交错：组内按位置递增延迟（入场用；出场无延迟，见 CSS）
-    if (idx > 0) el.style.setProperty('--d', (Math.min(idx, 4) * 0.08) + 's');
+    el._stagger = Math.min(idx, 5) * 46; // 像素级交错，靠后的元素稍晚进入
   });
 
-  if ('IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        // 进入/离开视口都切换，实现双向重复触发
-        en.target.classList.toggle('is-visible', en.isIntersecting);
-      });
-    }, { threshold: 0.15 });
-    revealEls.forEach(function (el) { io.observe(el); });
+  // 视差层次：标题相对内容缓慢漂移，形成“一页页深入”的纵深
+  var parallaxEls = Array.prototype.slice.call(document.querySelectorAll('.section-head, .hero-inner'));
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var animTicking = false;
+  function paintScroll() {
+    animTicking = false;
+    var vh = window.innerHeight || 1;
+    var win = 0.72 * vh; // 元素从“顶到视口底部”到“顶到 28% 处”完成动画
+
+    for (var i = 0; i < revealEls.length; i++) {
+      var el = revealEls[i];
+      var top = el.getBoundingClientRect().top + (el._stagger || 0);
+      var p = (vh - top) / win;
+      p = p < 0 ? 0 : (p > 1 ? 1 : p);
+      el.style.setProperty('--p', p.toFixed(3));
+    }
+
+    for (var j = 0; j < parallaxEls.length; j++) {
+      var pe = parallaxEls[j];
+      var r = pe.getBoundingClientRect();
+      var center = r.top + r.height / 2 - vh / 2;
+      var speed = pe.classList.contains('hero-inner') ? 0.1 : 0.06;
+      pe.style.translate = '0 ' + (center * speed).toFixed(1) + 'px';
+    }
+  }
+
+  function onScrollAnim() {
+    if (!animTicking) {
+      animTicking = true;
+      requestAnimationFrame(paintScroll);
+    }
+  }
+
+  if (reduceMotion) {
+    revealEls.forEach(function (el) { el.style.setProperty('--p', '1'); });
   } else {
-    revealEls.forEach(function (el) { el.classList.add('is-visible'); });
+    window.addEventListener('scroll', onScrollAnim, { passive: true });
+    window.addEventListener('resize', onScrollAnim, { passive: true });
+    window.addEventListener('load', onScrollAnim);
+    paintScroll();
   }
 
   /* ---------- 回到顶部 ---------- */
