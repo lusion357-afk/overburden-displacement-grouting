@@ -637,23 +637,31 @@ html[data-theme="dark"] .icon-moon { display: block; }
 .lightbox-prev { left: 22px; }
 .lightbox-next { right: 22px; }
 
-/* ---------- 滚动入场动画 ---------- */
+/* ---------- 滚动动画（双向触发 · 多变体 · 交错） ---------- */
 html.js .reveal {
   opacity: 0;
-  transform: translateY(26px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transform: translateY(30px);
+  transition: opacity 0.75s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.75s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
-html.js .reveal.is-visible { opacity: 1; transform: none; }
 
-.hero-inner > .reveal:nth-child(2) { transition-delay: 0.06s; }
-.hero-inner > .reveal:nth-child(3) { transition-delay: 0.12s; }
-.hero-inner > .reveal:nth-child(4) { transition-delay: 0.18s; }
-.hero-inner > .reveal:nth-child(5) { transition-delay: 0.24s; }
-.hero-inner > .reveal:nth-child(6) { transition-delay: 0.30s; }
-.hero-inner > .reveal:nth-child(7) { transition-delay: 0.36s; }
+/* 方向 / 形式变体 */
+html.js .reveal[data-reveal="fade"]  { transform: none; }
+html.js .reveal[data-reveal="down"]  { transform: translateY(-30px); }
+html.js .reveal[data-reveal="left"]  { transform: translateX(-54px); }
+html.js .reveal[data-reveal="right"] { transform: translateX(54px); }
+html.js .reveal[data-reveal="scale"] { transform: scale(0.86); }
+html.js .reveal[data-reveal="zoom"]  { transform: scale(1.08); }
+html.js .reveal[data-reveal="flip"]  { transform: perspective(900px) rotateX(14deg) translateY(16px); }
+
+html.js .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+  transition-delay: var(--d, 0s);
+}
 
 @media (prefers-reduced-motion: reduce) {
-  html.js .reveal { opacity: 1; transform: none; transition: none; }
+  html.js .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
   html { scroll-behavior: auto; }
 }
 

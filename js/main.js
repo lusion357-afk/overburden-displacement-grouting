@@ -50,17 +50,33 @@
   window.addEventListener('scroll', updateSpy, { passive: true });
   updateSpy();
 
-  /* ---------- 滚动入场动画 ---------- */
+  /* ---------- 滚动动画（双向触发 · 多变体 · 交错） ---------- */
   var revealEls = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+  var variants = ['up', 'left', 'right', 'scale', 'zoom', 'flip', 'down', 'fade'];
+
+  revealEls.forEach(function (el) {
+    // 同容器内的 reveal 子项作为一组，用于变体分配与交错延迟
+    var sibs = el.parentElement
+      ? Array.prototype.slice.call(el.parentElement.children)
+          .filter(function (c) { return c.classList.contains('reveal'); })
+      : [el];
+    var idx = Math.max(0, sibs.indexOf(el));
+
+    // 变体：未显式指定 data-reveal 时按顺序循环分配
+    if (!el.hasAttribute('data-reveal')) {
+      el.setAttribute('data-reveal', variants[idx % variants.length]);
+    }
+    // 交错：组内按位置递增延迟（入场用；出场无延迟，见 CSS）
+    if (idx > 0) el.style.setProperty('--d', (Math.min(idx, 4) * 0.08) + 's');
+  });
+
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
-        if (en.isIntersecting) {
-          en.target.classList.add('is-visible');
-          io.unobserve(en.target);
-        }
+        // 进入/离开视口都切换，实现双向重复触发
+        en.target.classList.toggle('is-visible', en.isIntersecting);
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -48px 0px' });
+    }, { threshold: 0.15 });
     revealEls.forEach(function (el) { io.observe(el); });
   } else {
     revealEls.forEach(function (el) { el.classList.add('is-visible'); });
