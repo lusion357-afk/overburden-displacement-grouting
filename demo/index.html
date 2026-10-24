@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#edf2ee">
+  <title>智能注浆 · 覆岩三带与沉降对照 3D 演示 v0.4</title>
+  <link rel="stylesheet" href="styles.css?v=04c">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="page-header">
+      <div class="brand-block">
+        <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+        <div><p class="eyebrow">智能注浆 · 交互原理演示</p><h1>从岩层运动，到定向支撑</h1></div>
+      </div>
+      <div class="header-notes"><span class="version-badge">调试版 04</span><span class="data-notice">原理演示 · 非试验数据</span></div>
+    </header>
+
+    <main>
+      <section class="experience-grid" aria-label="三维交互演示">
+        <div class="scene-panel">
+          <div class="scene-toolbar">
+            <div class="segmented" aria-label="场景切换">
+              <button class="mode-button active" type="button" data-mode="lab" aria-pressed="true">实验箱</button>
+              <button class="mode-button" type="button" data-mode="mine" aria-pressed="false">矿井剖面</button>
+            </div>
+            <span class="scene-tag"><span class="status-dot"></span>单控制区 · 同进度对照</span>
+          </div>
+          <div id="scene-viewport" class="scene-viewport is-comparison">
+            <canvas id="scene-canvas" aria-label="自动注浆与未注浆同步对比：覆岩三带、金属杆变形及地表下沉的三维场景"></canvas>
+            <div id="comparison-headings" class="comparison-headings">
+              <div class="case-heading case-heading--treated"><strong><i></i>自动注浆</strong><span id="treated-summary">同步开采 · 待机监测</span></div>
+              <div class="case-heading case-heading--untreated"><strong><i></i>未注浆</strong><span id="untreated-summary">同步开采 · 持续监测</span></div>
+            </div>
+            <div class="comparison-divider" aria-hidden="true"></div>
+            <div id="scene-labels" class="scene-labels" aria-hidden="true"></div>
+            <div id="scene-loading" class="scene-loading"><span class="loading-ring"></span><span>正在构建三维场景…</span></div>
+            <div class="view-hint"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8V6a4 4 0 0 1 8 0v2M7 8h10v9a5 5 0 0 1-10 0V8Z"/><path d="M12 8v5"/></svg>拖动旋转 · 滚轮缩放</div>
+            <div class="scene-caption">同进度对照 · 变形幅度放大示意</div>
+          </div>
+          <nav class="camera-bar" aria-label="观察镜头">
+            <span class="camera-label">观察</span>
+            <button type="button" class="camera-button active" id="auto-camera" aria-pressed="true"><span class="auto-camera-dot"></span>自动镜头</button>
+            <button type="button" class="camera-button" data-camera="overview" aria-pressed="false">全景</button>
+            <button type="button" class="camera-button" data-camera="back" aria-pressed="false">背面</button>
+            <button type="button" class="camera-button" data-camera="mining" aria-pressed="false">开采</button>
+            <button type="button" class="camera-button" data-camera="zones" aria-pressed="false">覆岩三带</button>
+            <button type="button" class="camera-button" data-camera="sensor" aria-pressed="false">监测杆</button>
+            <button type="button" class="camera-button" data-camera="grout" aria-pressed="false">注浆</button>
+            <button type="button" class="camera-button" data-camera="surface" aria-pressed="false">地表</button>
+          </nav>
+          <div class="zones-guide" aria-label="覆岩三带解读">
+            <div class="zones-guide-heading"><strong>覆岩三带 · 看形态辨分区</strong><span>从煤层向上，破坏程度总体减弱</span></div>
+            <div class="zone-explainer zone-explainer--caving"><b>① 垮落带 <small>又称冒落带</small></b><p>岩层破碎成块，转动、下落并堆积，原有层状连续性遭到破坏。</p></div>
+            <div class="zone-explainer zone-explainer--fractured"><b>② 裂隙带 <small>亦称裂缝带</small></b><p>仍可辨认层状结构；出现竖向、斜向断裂和水平离层，并非全部散落。</p></div>
+            <div class="zone-explainer zone-explainer--bending"><b>③ 弯曲下沉带</b><p>层理总体连续，随下部运动弯曲下沉；不表示绝对没有裂隙或离层。</p></div>
+            <p class="zone-scope">分界虚线与范围仅为示意，非实测带高；50 米是监测目标层参考位置，不是三带分界。灰色虚线表示初始层理。</p>
+            <details class="zone-sources"><summary>资料依据与适用范围</summary><p>按传统“上三带”概念表达，三带不是三种岩性，也不是三个注浆区。实际形态和带高受采厚、岩性、结构与开采条件影响，需另行标定。</p><p><a href="https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D759DED3A7E05397BE0A0AB82A" target="_blank" rel="noopener">GB/T 15663.7—2008：官方现行标准信息</a>（本次核验标准状态，未取得可核对的全文条款）；形态参考：<a href="https://mtkxjs.com.cn/fileMTKXJS/journal/article/mtkxjs/html/2020/11/440482.html" target="_blank" rel="noopener">《煤层采动覆岩破坏规律与控制技术研究进展》</a>、<a href="https://www.mtxb.com.cn/fileMTXB/journal/article/mtxb/html/2019/2/20190330%E7%85%A4%E7%82%AD%E5%AD%A6%E6%8A%A5201902023.html" target="_blank" rel="noopener">《煤矿地下水库储水空间构成分析及计算方法》</a>。本动画不是矿井设计或标准符合性验证。</p></details>
+          </div>
+        </div>
+
+        <aside class="process-panel" aria-label="当前过程说明">
+          <div class="process-topline"><span>当前阶段</span><span id="stage-number">01 / 07</span></div>
+          <h2 id="stage-title">结构与布置</h2>
+          <p id="stage-text">从井下巷道向上布置监测金属杆，观察煤层上方目标岩层的运动。地面注浆系统通过独立管路连接候选离层空间。</p>
+          <div class="system-state">
+            <div class="system-state-row"><span>监测状态</span><strong id="monitor-state"><i></i>等待岩层运动</strong></div>
+            <div class="system-state-row"><span>注浆泵</span><strong id="pump-state"><i></i>待机</strong></div>
+            <div class="system-state-row"><span>浆体状态</span><strong id="grout-state"><i></i>尚未注入</strong></div>
+          </div>
+          <div class="key-relationship">
+            <span class="small-label">本版监测路线</span>
+            <strong>井下巷道 → 向上布杆</strong>
+            <p>杆上应变片感知杆件变形，示意推断目标岩层位移。</p>
+            <span class="reference-tag">目标岩层：煤层上方 50 米（原型参考）</span>
+          </div>
+          <div class="display-options" aria-label="显示选项">
+            <label class="option-row"><span>透视内部结构</span><input type="checkbox" data-option="interior"><span class="switch" aria-hidden="true"></span></label>
+            <label class="option-row"><span>显示中文标注</span><input type="checkbox" data-option="labels" checked><span class="switch" aria-hidden="true"></span></label>
+            <label class="option-row"><span>放大岩层变形</span><input type="checkbox" data-option="exaggeration" checked><span class="switch" aria-hidden="true"></span></label>
+            <label class="option-row"><span>左右同步对照</span><input type="checkbox" data-option="comparison" checked><span class="switch" aria-hidden="true"></span></label>
+          </div>
+        </aside>
+      </section>
+
+      <section class="playback-panel" aria-label="播放与阶段控制">
+        <div class="player-row">
+          <button type="button" id="play-button" class="primary-button" aria-label="播放动画"><svg id="play-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 9 6-9 6Z"/></svg><span id="play-label">播放</span></button>
+          <button type="button" id="reset-button" class="icon-button" title="重置演示" aria-label="重置演示"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10a8 8 0 1 1 1 8M4 4v6h6"/></svg></button>
+          <button type="button" id="previous-button" class="step-button" aria-label="上一个阶段"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m12 5-5 5 5 5"/></svg><span>上一步</span></button>
+          <button type="button" id="next-button" class="step-button" aria-label="下一个阶段"><span>下一步</span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m8 5 5 5-5 5"/></svg></button>
+          <div class="progress-wrap"><label for="progress-slider" class="sr-only">演示进度</label><input type="range" id="progress-slider" min="0" max="1000" value="0" step="1"><output id="progress-label" for="progress-slider">0%</output></div>
+          <label class="speed-control" for="speed-select"><span>速度</span><select id="speed-select"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></label>
+        </div>
+        <nav class="stage-track" aria-label="跳转演示阶段">
+          <button type="button" data-stage="0" class="stage-step active" aria-current="step"><span>01</span><strong>结构布置</strong></button>
+          <button type="button" data-stage="1" class="stage-step"><span>02</span><strong>自动开采</strong></button>
+          <button type="button" data-stage="2" class="stage-step"><span>03</span><strong>位移离层</strong></button>
+          <button type="button" data-stage="3" class="stage-step"><span>04</span><strong>监测触发</strong></button>
+          <button type="button" data-stage="4" class="stage-step"><span>05</span><strong>定向注浆</strong></button>
+          <button type="button" data-stage="5" class="stage-step"><span>06</span><strong>反馈调节</strong></button>
+          <button type="button" data-stage="6" class="stage-step"><span>07</span><strong>凝固总览</strong></button>
+        </nav>
+      </section>
+
+      <section class="response-section" aria-label="归一化演示曲线">
+        <div class="section-heading"><div><h2>过程响应</h2><span>随播放进度同步显示</span></div><span class="chart-notice">归一化演示值 · 不代表实际参数或控制效果</span></div>
+        <div class="charts-grid">
+          <article class="chart-card"><div class="chart-heading"><h3>位移响应</h3><span class="metric-value" id="metric-settlement">0.00</span></div><div class="chart-legend"><span><i class="legend-line teal"></i>自动注浆示意</span><span id="comparison-legend"><i class="legend-line orange dashed"></i>无注浆示意</span></div><canvas id="chart-settlement" class="chart-canvas" aria-label="自动注浆与无注浆的归一化位移响应示意曲线"></canvas></article>
+          <article class="chart-card"><div class="chart-heading"><h3>监测应变响应</h3><span class="metric-value" id="metric-strain">0.00</span></div><div class="chart-legend"><span><i class="legend-line purple"></i>注浆情形杆件</span><span id="strain-comparison-legend"><i class="legend-line red dashed"></i>未注浆杆件</span><span class="muted">与位移的关系待标定</span></div><canvas id="chart-strain" class="chart-canvas" aria-label="注浆与未注浆两种情形下监测杆归一化应变响应示意曲线"></canvas></article>
+          <article class="chart-card"><div class="chart-heading"><h3>注浆调节</h3><span class="metric-pair"><span>P <b id="metric-pressure">0.00</b></span><span>Q <b id="metric-flow">0.00</b></span></span></div><div class="chart-legend"><span><i class="legend-line teal"></i>压力 P</span><span><i class="legend-line blue"></i>流量 Q</span></div><canvas id="chart-pump" class="chart-canvas" aria-label="归一化注浆压力和流量调节示意曲线"></canvas></article>
+        </div>
+      </section>
+
+      <details class="notes-panel">
+        <summary><span>查看说明</span><span class="summary-subtitle">操作方式与示意边界</span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 7 5 5 5-5"/></svg></summary>
+        <div class="notes-content"><div><h3>如何观察</h3><p>左右以同一进度开采；拖动任一侧同步旋转，滚轮缩放。上下拖动方向已反转。点击“覆岩三带”“监测杆”或“地表”查看差异；关闭对照可放大观察注浆情形。</p></div><div><h3>模型与检测</h3><p>50 米为原型参考高度，画面不是按工程比例绘制。监测杆从井下巷道向上布置，弯曲形变适度放大；杆—岩层耦合、应变与位移换算仍需试验标定。三带展示发展过程，分界不代表真实矿井高度。</p></div><div><h3>地表对比与注浆</h3><p>注浆保留已有下沉，抑制后续发展；未注浆后期展示局部塌陷这一候选情形。目标层下方离层仍为候选注浆位置。两侧差异用于说明控制思路，实际幅度、塌陷条件与控制阈值需数据验证。</p></div></div>
+      </details>
+      <p class="flow-note">浆液流动、填充与凝固为外观示意；凝固时间经压缩，材料性质与实际时长仍待标定。</p>
+      <p class="flow-note">近煤层顶板可先发生局部垮落；注浆在目标岩层明显位移、离层发展且尚未大范围垮落时启动。</p>
+      <footer class="page-footer"><span>单控制区验证 → 后续扩展多区域联动</span><span>交互原型 · v0.4</span></footer>
+    </main>
+  </div>
+  <script src="vendor/three.min.js"></script>
+  <script src="mining-volume.js?v=04c"></script>
+  <script src="grout-volume.js?v=04c"></script>
+  <script src="overburden-three-zones.js?v=04c"></script>
+  <script src="scene.js?v=04c"></script>
+  <script src="ui.js?v=04c"></script>
+</body>
+</html>

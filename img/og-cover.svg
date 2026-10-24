@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="智能注浆开采模型">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0e1418"/>
+      <stop offset="1" stop-color="#122b2e"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#14b8a6"/>
+      <stop offset="1" stop-color="#3b82f6"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <g opacity="0.16" fill="none" stroke="#14b8a6" stroke-width="2">
+    <path d="M0 240h1200M0 330h1200M0 420h1200"/>
+    <path d="M0 160c300 90 900 90 1200 0M0 470c300 90 900 90 1200 0"/>
+  </g>
+  <rect x="80" y="66" width="10" height="26" rx="4" fill="url(#accent)"/>
+  <text x="80" y="160" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="72" font-weight="700" fill="#f6f8fa">智能注浆开采模型</text>
+  <text x="82" y="220" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="34" fill="#9fb3bd">基于协同联动的矿山覆岩位移—注浆补偿试验模型</text>
+  <rect x="80" y="300" width="300" height="1.5" fill="url(#accent)"/>
+  <text x="80" y="360" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="26" fill="#14b8a6">模拟地下开采 · 动态监测岩层位移 · 智能触发注浆补偿</text>
+  <text x="80" y="520" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="24" fill="#667a85">中国矿业大学（北京）能源与矿业学院</text>
+  <text x="80" y="560" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="22" fill="#556a75">原理演示 · 非试验数据</text>
+</svg>
