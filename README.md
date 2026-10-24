@@ -2,7 +2,7 @@
 
 基于协同联动的矿山覆岩位移—注浆补偿试验模型的项目展示网站，含交互式三维演示。
 
-- **在线访问**：`https://lusion357-afk.github.io/intelligent-grouting/`
+- **在线访问**：`https://lusion357-afk.github.io/overburden-displacement-grouting/`
 - **单位**：中国矿业大学（北京）能源与矿业学院，"未来+"大学生创新中心开放项目
 - **性质**：交互原型 · 原理演示 · 非试验数据（尚未开展实验）
 
@@ -42,12 +42,12 @@ npx serve .
 
 ## 部署到 GitHub Pages
 
-1. 在 GitHub 新建仓库（如 `intelligent-grouting`）。
+1. 在 GitHub 新建仓库（如 `overburden-displacement-grouting`）。
 2. 推送本目录内容到 `main` 分支。
 3. 仓库 Settings → Pages → Build and deployment 选择 **Deploy from a branch**，分支选 `main`、目录选 `/ (root)`。
 4. 等待构建完成后访问 `https://<用户名>.github.io/<仓库名>/`。
 
-> 页面的 canonical / Open Graph 链接已配置为 `lusion357-afk.github.io/intelligent-grouting`。
+> 页面的 canonical / Open Graph 链接已配置为 `lusion357-afk.github.io/overburden-displacement-grouting`。
 
 ## 说明
 
