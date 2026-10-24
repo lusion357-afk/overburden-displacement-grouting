@@ -659,7 +659,7 @@ html.js .reveal[data-reveal="right"]    { transform: translateX(calc(56px * (1 -
 html.js .reveal[data-reveal="grow"]     { transform: translateY(calc(10px * (1 - var(--p)))) scale(calc(0.3 + 0.7 * var(--p))); }
 html.js .reveal[data-reveal="curtain"]  { clip-path: inset(0 calc(50% * (1 - var(--p))) 0 calc(50% * (1 - var(--p)))); }
 html.js .reveal[data-reveal="swoosh"]   { transform: translateX(calc(150px * (1 - var(--p)))) skewX(calc(-16deg * (1 - var(--p)))); }
-html.js .reveal[data-reveal="radiate"]  { transform: scale(calc(0.4 + 0.6 * var(--p))); filter: blur(calc(8px * (1 - var(--p)))); }
+html.js .reveal[data-reveal="radiate"]  { transform: scale(calc(0.4 + 0.6 * var(--p))); }
 html.js .reveal[data-reveal="flip"]     { transform: perspective(900px) rotateX(calc(14deg * (1 - var(--p)))) translateY(calc(16px * (1 - var(--p)))); }
 
 @media (prefers-reduced-motion: reduce) {

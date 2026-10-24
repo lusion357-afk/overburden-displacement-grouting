@@ -66,7 +66,7 @@
     if (!el.hasAttribute('data-reveal')) {
       el.setAttribute('data-reveal', variants[idx % variants.length]);
     }
-    el._stagger = Math.min(idx, 5) * 46; // 像素级交错，靠后的元素稍晚进入
+    el._stagger = Math.min(idx, 5) * 20; // 像素级交错，靠后的元素稍晚进入
   });
 
   // 视差层次：标题相对内容缓慢漂移，形成“一页页深入”的纵深
@@ -77,7 +77,7 @@
   function paintScroll() {
     animTicking = false;
     var vh = window.innerHeight || 1;
-    var win = 0.72 * vh; // 元素从“顶到视口底部”到“顶到 28% 处”完成动画
+    var win = 0.3 * vh; // 元素进入视口后快速完成，避免长时间停留在半透明状态
 
     for (var i = 0; i < revealEls.length; i++) {
       var el = revealEls[i];
