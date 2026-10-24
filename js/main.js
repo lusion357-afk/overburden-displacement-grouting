@@ -52,7 +52,7 @@
 
   /* ---------- 滚动动画（双向触发 · 多变体 · 交错） ---------- */
   var revealEls = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
-  var variants = ['up', 'left', 'right', 'scale', 'zoom', 'flip', 'down', 'fade'];
+  var variants = ['up', 'left', 'right', 'grow', 'curtain', 'swoosh', 'radiate', 'flip', 'fade'];
 
   revealEls.forEach(function (el) {
     // 同容器内的 reveal 子项作为一组，用于变体分配与交错延迟
