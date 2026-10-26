@@ -23,6 +23,15 @@
   --shadow-sm: 0 1px 2px rgba(15, 26, 34, 0.08);
   --shadow: 0 2px 6px rgba(15, 26, 34, 0.08), 0 14px 40px rgba(15, 26, 34, 0.14);
   --header-bg: rgba(238, 241, 245, 0.86);
+
+  /* 各 section 差异化底色（明暗主题各一套，避免整页同色单调） */
+  --tint-neutral: #f6f7f9;
+  --tint-teal: #ddefec;
+  --tint-amber: #f7edda;
+  --tint-slate: #e6ecf3;
+  --tint-blue: #e6edf9;
+  --tint-violet: #eceaf7;
+  --tint-warm: #f4efe6;
 }
 
 html[data-theme="dark"] {
@@ -43,6 +52,14 @@ html[data-theme="dark"] {
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45);
   --shadow: 0 2px 6px rgba(0, 0, 0, 0.45), 0 16px 44px rgba(0, 0, 0, 0.55);
   --header-bg: rgba(8, 13, 17, 0.84);
+
+  --tint-neutral: #0c1116;
+  --tint-teal: #0e201d;
+  --tint-amber: #211a11;
+  --tint-slate: #0e161f;
+  --tint-blue: #101a26;
+  --tint-violet: #16131f;
+  --tint-warm: #1d1812;
 }
 
 /* ---------- 基础 ---------- */
@@ -263,7 +280,15 @@ html[data-theme="dark"] .icon-moon { display: block; }
 
 /* ---------- Section 通用 ---------- */
 .section { padding: 92px 0; }
-.section-alt { background: var(--bg-alt); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.section--about     { background: linear-gradient(180deg, var(--tint-neutral), var(--bg) 88%); }
+.section--principle { background: linear-gradient(180deg, var(--tint-teal),    var(--bg-alt) 88%); }
+.section--zones     { background: linear-gradient(180deg, var(--tint-amber),   var(--bg) 88%); }
+.section--demo      { background: linear-gradient(180deg, var(--tint-slate),   var(--bg-alt) 88%); }
+.section--team      { background: linear-gradient(180deg, var(--tint-blue),    var(--bg) 88%); }
+.section--reference { background: linear-gradient(180deg, var(--tint-violet),  var(--bg-alt) 88%); }
+.section--gallery   { background: linear-gradient(180deg, var(--tint-warm),    var(--bg) 88%); }
+.section--about, .section--principle, .section--zones, .section--demo,
+.section--team, .section--reference, .section--gallery { border-top: 1px solid var(--border); }
 .section-inner { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
 
 .section-head { max-width: 760px; margin: 0 auto 52px; text-align: center; }
@@ -474,49 +499,44 @@ html[data-theme="dark"] .icon-moon { display: block; }
 .demo-notes-body p { font-size: 13.5px; color: var(--text-soft); }
 
 /* ---------- 团队成员 ---------- */
+.team-subhead { text-align: center; font-size: 15px; font-weight: 700; color: var(--text-muted); margin: 0 0 22px; letter-spacing: 0.02em; }
 .team-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 18px;
-  margin-bottom: 34px;
 }
 .member-card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 16px;
-  padding: 30px 18px;
+  padding: 26px 18px;
   text-align: center;
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 .member-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--border-strong); }
-.member-avatar {
-  width: 66px; height: 66px;
-  margin: 0 auto 16px;
-  display: grid; place-items: center;
-  font-size: 26px;
-  font-weight: 700;
-  color: #fff;
-  background: var(--grad);
-  border-radius: 50%;
-}
 .member-name { font-size: 18px; margin-bottom: 4px; }
 .member-role { display: block; font-size: 13px; color: var(--accent-strong); font-weight: 600; margin-bottom: 6px; }
 .member-id { font-size: 12.5px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
 
 .advisor {
-  max-width: 560px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 18px;
+  max-width: 860px;
+  margin: 0 auto 44px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 24px 28px;
+  border-radius: 18px;
+  padding: 28px 32px;
+  position: relative;
+  overflow: hidden;
 }
+.advisor::before {
+  content: "";
+  position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: var(--grad);
+}
+.advisor-head { display: flex; align-items: center; gap: 18px; margin-bottom: 18px; }
 .advisor-mark {
   flex: 0 0 auto;
-  width: 58px; height: 58px;
+  width: 60px; height: 60px;
   display: grid; place-items: center;
   font-size: 22px;
   font-weight: 700;
@@ -525,9 +545,24 @@ html[data-theme="dark"] .icon-moon { display: block; }
   border-radius: 14px;
 }
 .advisor-label { font-size: 12.5px; color: var(--text-muted); letter-spacing: 0.05em; }
-.advisor h3 { font-size: 20px; margin: 2px 0 4px; }
-.advisor h3 small { font-size: 14px; font-weight: 500; color: var(--accent-strong); }
-.advisor p { font-size: 13.5px; color: var(--text-soft); }
+.advisor-head h3 { font-size: 24px; margin: 2px 0 2px; }
+.advisor-head h3 small { font-size: 15px; font-weight: 500; color: var(--accent-strong); }
+.advisor-title { font-size: 14px; color: var(--text-soft); margin: 0; }
+.advisor-body { border-top: 1px solid var(--border); padding-top: 16px; }
+.advisor-intro { font-size: 14.5px; color: var(--text-soft); margin-bottom: 14px; }
+.advisor-points { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 9px 28px; }
+.advisor-points li {
+  position: relative;
+  padding-left: 16px;
+  font-size: 13.5px;
+  color: var(--text-soft);
+}
+.advisor-points li::before {
+  content: "";
+  position: absolute; left: 0; top: 8px;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent);
+}
 
 /* ---------- 文献参考 ---------- */
 .ref-list { list-style: none; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
@@ -682,6 +717,8 @@ html.js .reveal[data-reveal="flip"]     { transform: perspective(900px) rotateX(
   .hero-stats { grid-template-columns: repeat(2, 1fr); }
   .stage-list { grid-template-columns: 1fr; }
   .team-grid { grid-template-columns: repeat(2, 1fr); }
+  .advisor { padding: 24px 20px; }
+  .advisor-points { grid-template-columns: 1fr; }
 
   .nav-links {
     position: fixed;
