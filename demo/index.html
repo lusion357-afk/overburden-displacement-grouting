@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#edf2ee">
-  <title>智能注浆 · 覆岩三带与沉降对照 3D 演示 v0.4</title>
-  <link rel="stylesheet" href="styles.css?v=04c">
+  <title>华丰 1411 错层位离层注浆减沉 · 相似模拟电子化模型 v1.0 · r30</title>
+  <link rel="stylesheet" href="styles.css?v=09a">
 </head>
 <body>
   <div class="app-shell">
@@ -14,7 +14,7 @@
         <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div>
         <div><p class="eyebrow">智能注浆 · 交互原理演示</p><h1>从岩层运动，到定向支撑</h1></div>
       </div>
-      <div class="header-notes"><span class="version-badge">调试版 04</span><span class="data-notice">原理演示 · 非试验数据</span></div>
+      <div class="header-notes"><span class="version-badge">v1.0 · r30</span><span class="data-notice">相似模拟电子化表达 · 非试验数据</span></div>
     </header>
 
     <main>
@@ -39,12 +39,23 @@
             <div class="view-hint"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8V6a4 4 0 0 1 8 0v2M7 8h10v9a5 5 0 0 1-10 0V8Z"/><path d="M12 8v5"/></svg>拖动旋转 · 滚轮缩放</div>
             <div class="scene-caption">同进度对照 · 变形幅度放大示意</div>
           </div>
+          <!-- v0.6 S1：倾向剖面 —— 巷道真实断面 4.5×2.2 m 在 1:200 下不足 5×2 px，
+               3D 全景不可辨（且巷道是采空区里的负空间），故用 2D 剖面按真实比例呈现；
+               3D 已改为真实断面不放大，本图与 3D 不存在各向异性差。 -->
+          <figure id="lane-inset" class="lane-inset">
+            <figcaption class="lane-inset__title">倾向剖面 · 错层位双巷 + 进风端三角底煤 + 三机（等比 · 断裂视图）</figcaption>
+            <canvas id="lane-section" class="lane-inset__canvas" width="720" height="210"
+                    aria-label="垂直于煤层的倾向剖面：进风巷贴煤层顶板位于高程较高的一端，其正下方是沿倾向 22.5 m 尖灭的三角底煤（最大厚 4.0 m），回风巷贴煤层底板位于另一端，两巷相距一个工作面面长 142 米，断面各按真实 4.5×2.2 米等比绘制，中部省略 128.1 米"></canvas>
+            <p class="lane-inset__note">垂直于煤层的倾向剖面，30° 倾角在此图中被展开为水平带，本图不表达倾角。<br>横纵同一比例尺（等比），巷宽 4.5 m、巷高 2.2 m、煤厚 6.2 m 均为真实值；3D 场景同样按真实断面建模，不作可见性放大。<br>两巷分居倾向两端头、相距一个面长 142 m，中部 128.1 m 用断裂视图省略；同一端头内巷道底面到煤底为 4.0 m（= 6.2 − 2.2）。<br><b>三角底煤（暗绿）</b>：进风巷沿煤层顶板布置，其正下方是满厚 4.0 m 的平段，再向工作面内 18 m 斜边线性尖灭（12.53°），倾向合计 22.5 m；这是「端头逐节抬溜」留下的工艺丢煤，沿走向全长不变厚，不是区段煤柱。3D 里它位于进风端头、进风巷正下方，全厚仅约 6 px 且被箱体岩层端墙遮住，从任何外部机位都剖不到——本剖面即它的可见性交付物（3D 只保证几何正确：沿走向 96 段 × 19 块 = 1824 个 ramp 块）。<br><b>三机（v1.0 · 等比例 1:200）</b>：刮板输送机 88 节 × 1.5 m 铺满工作面，绿色段上沿的深灰条带就是三角煤段的 12 节逐节抬升（12.53°，与三角煤斜边严格相切）；液压支架 88 架 × 1.5 m 与溜槽<b>一板一架</b>——三角煤的斜边就是这一段的煤层底板，槽 12 节与架 12 架同沿 12.53° 斜面爬上去，尖灭点之后 76 架水平铺至回风端头；支撑高 3.0 m（综放机采高度，上方 3.2 m 顶煤由放煤口放出），斜边最高处顶梁高出煤顶 0.73 m，按错层位端头<b>破顶</b>处理（顶梁接直接顶）；采煤机 1 台在 z = 0 落在断裂区。3D 里溜槽截面仅约 1.2 px、支架 6.2 × 12.4 px——可辨的是支架列与采煤机轮廓，截面与逐节抬溜细节由本图承担。</p>
+          </figure>
           <nav class="camera-bar" aria-label="观察镜头">
             <span class="camera-label">观察</span>
             <button type="button" class="camera-button active" id="auto-camera" aria-pressed="true"><span class="auto-camera-dot"></span>自动镜头</button>
             <button type="button" class="camera-button" data-camera="overview" aria-pressed="false">全景</button>
             <button type="button" class="camera-button" data-camera="back" aria-pressed="false">背面</button>
             <button type="button" class="camera-button" data-camera="mining" aria-pressed="false">开采</button>
+        <button type="button" class="camera-button" data-camera="equip" aria-pressed="false">三机</button>
+            <button type="button" class="camera-button" data-camera="lanes" aria-pressed="false">层位巷道</button>
             <button type="button" class="camera-button" data-camera="zones" aria-pressed="false">覆岩三带</button>
             <button type="button" class="camera-button" data-camera="sensor" aria-pressed="false">监测杆</button>
             <button type="button" class="camera-button" data-camera="grout" aria-pressed="false">注浆</button>
@@ -115,18 +126,26 @@
 
       <details class="notes-panel">
         <summary><span>查看说明</span><span class="summary-subtitle">操作方式与示意边界</span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 7 5 5 5-5"/></svg></summary>
-        <div class="notes-content"><div><h3>如何观察</h3><p>左右以同一进度开采；拖动任一侧同步旋转，滚轮缩放。上下拖动方向已反转。点击“覆岩三带”“监测杆”或“地表”查看差异；关闭对照可放大观察注浆情形。</p></div><div><h3>模型与检测</h3><p>50 米为原型参考高度，画面不是按工程比例绘制。监测杆从井下巷道向上布置，弯曲形变适度放大；杆—岩层耦合、应变与位移换算仍需试验标定。三带展示发展过程，分界不代表真实矿井高度。</p></div><div><h3>地表对比与注浆</h3><p>注浆保留已有下沉，抑制后续发展；未注浆后期展示局部塌陷这一候选情形。目标层下方离层仍为候选注浆位置。两侧差异用于说明控制思路，实际幅度、塌陷条件与控制阈值需数据验证。</p></div></div>
+        <div class="notes-content"><div><h3>如何观察</h3><p>左右以同一进度开采；拖动任一侧同步旋转，滚轮缩放。上下拖动方向已反转。点击“覆岩三带”“监测杆”或“地表”查看差异；关闭对照可放大观察注浆情形。</p></div><div><h3>模型与检测</h3><p>50 米为原型参考高度，画面不是按工程比例绘制。监测杆从井下巷道向上布置，弯曲形变适度放大；杆—岩层耦合、应变与位移换算仍需试验标定。三带展示发展过程，分界不代表真实矿井高度。地面泵站与控制器按展示需要置于展框顶盖玻璃上（非真实地面标高），注浆管自顶盖孔口向下接入离层。</p></div><div><h3>地表对比与注浆</h3><p>注浆保留已有下沉，抑制后续发展；未注浆后期展示局部塌陷这一候选情形。目标层下方离层仍为候选注浆位置。两侧差异用于说明控制思路，实际幅度、塌陷条件与控制阈值需数据验证。</p></div></div>
       </details>
       <p class="flow-note">浆液流动、填充与凝固为外观示意；凝固时间经压缩，材料性质与实际时长仍待标定。</p>
       <p class="flow-note">近煤层顶板可先发生局部垮落；注浆在目标岩层明显位移、离层发展且尚未大范围垮落时启动。</p>
-      <footer class="page-footer"><span>单控制区验证 → 后续扩展多区域联动</span><span>交互原型 · v0.4</span></footer>
+      <footer class="page-footer"><span>华丰 1411 · 错层位完全无煤柱搭接 + 离层连续一体化注浆</span><span>v1.0 · r30 · 三机等比例 1:200（输送机 88 节 / 支架 88 架 / 采煤机 1 台）+ 三角底煤沿倾向 22.5 m（进风端·沿走向全长）+ 双巷全程贴顶贯通</span></footer>
     </main>
   </div>
   <script src="vendor/three.min.js"></script>
-  <script src="mining-volume.js?v=04c"></script>
+  <!-- v0.6 基准层：数据层 → 几何层（顺序不可颠倒）-->
+  <script src="data/geology.js?v=11a"></script>
+  <script src="geometry.js?v=11a"></script>
+  <script src="mining-volume.js?v=10a"></script>
   <script src="grout-volume.js?v=04c"></script>
-  <script src="overburden-three-zones.js?v=04c"></script>
-  <script src="scene.js?v=04c"></script>
+  <script src="overburden-three-zones.js?v=06s1h"></script>
+  <script src="scene.js?v=11a"></script>
+  <script src="lane-section.js?v=10a"></script>
   <script src="ui.js?v=04c"></script>
+  <!-- 几何契约断言：页面加载即验，FAIL 在 console 显式报错 -->
+  <script src="_refs/verify_geometry.js?v=11a"></script>
+  <script src="_refs/verify_s1.js?v=09a"></script>
+  <script src="_refs/verify_equip.js?v=10a"></script>
 </body>
 </html>

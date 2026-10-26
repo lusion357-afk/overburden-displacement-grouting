@@ -2,8 +2,20 @@
 (() => {
   'use strict';
   window.createOverburdenZones = function ({ THREE:T, parent, deflect }) {
+    // v0.6 S0：三带标高与倾向尺度一律取自数据层（不再硬编码 0.46/1.34/3.65/±1.65）。
+    const G=window.__GEO__, MD=window.MINE_DATA;
+    if(!G||!MD) throw new Error('三带模块：geometry.js / data/geology.js 未加载');
+    const ZH=G.zHalf, ZD=2*ZH, Z0=-ZH, Z1=ZH;
+    const Uf=m=>m/G.S+G.coalTop;                 // 米 → 剪切组局部单位
+    const Z3=MD.literature.zones;
+    const yCoalTop=G.coalTop;                    // 煤顶
+    const yCav=Uf(Z3.caving.to);                 // 垮落带上缘 13.83 m
+    const yFra0=Uf(Z3.fractured.from), yFra1=Uf(Z3.fractured.to);  // 裂隙带 13.83~88 m
+    const ySurf=Uf(Z3.bending.to);               // 地表 150 m
+    const yA=Uf(20), yB2=Uf(32), yC2=Uf(56);     // 裂隙带内部岩层界面（S3/S4/S5/S6）
+    const band=k=>yFra1+(ySurf-yFra1)*k;
     const group = new T.Group(); group.name='覆岩三带定性体积示意'; parent.add(group);
-    const replacementLayerIndices=[2,3,4,5];
+    const replacementLayerIndices=[2,3,4,5,6,7];
     const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
     const smooth=(a,b,v)=>{const t=clamp((v-a)/(b-a));return t*t*(3-2*t);};
     const state={progress:0,face:-4.8,exaggeration:true,treated:true,interior:false};
@@ -33,7 +45,7 @@
       const nodes=Array.from({length:nx+1},(_,i)=>i===0?-6:i===nx?6:-6+i*12/nx+range(-randomness,randomness));
       const cells=[];
       for(const [row,level] of levels.entries())for(let ix=0;ix<nx;ix++)for(let iz=0;iz<nz;iz++){
-        const x0=nodes[ix],x1=nodes[ix+1],z0=-1.65+iz*3.3/nz,z1=z0+3.3/nz;
+        const x0=nodes[ix],x1=nodes[ix+1],z0=Z0+iz*ZD/nz,z1=z0+ZD/nz;
         const base=corners.map(([a,b,c])=>{
           const x=a<0?x0:x1,y=b<0?level.bottom:level.top,edge=ix+(a>0?1:0);
           // 同层相邻块体共享斜切面，初始严密拼合，开裂后形成斜向贯穿裂缝。
@@ -45,12 +57,13 @@
       }
       return cells;
     }
-    const cavingLevels=Array.from({length:3},(_,i)=>({bottom:.46+i*.88/3,top:.46+(i+1)*.88/3,index:2,color:'#aa9277'}));
+    const cavingLevels=Array.from({length:3},(_,i)=>({bottom:yCoalTop+i*(yCav-yCoalTop)/3,top:yCoalTop+(i+1)*(yCav-yCoalTop)/3,index:2,color:'#aa9277'}));
     const cavingCells=makeCells(24,6,cavingLevels,.075);
     const fractureCells=makeCells(18,6,[
-      {bottom:1.34,top:2.15,index:3,color:'#bdaa88'},
-      {bottom:2.15,top:2.92,index:4,color:'#9e927d'},
-      {bottom:2.92,top:3.65,index:5,color:'#c5b493'}
+      {bottom:yCav,top:yA,index:3,color:'#bdaa88'},
+      {bottom:yA,top:yB2,index:4,color:'#9e927d'},
+      {bottom:yB2,top:yC2,index:5,color:'#c5b493'},
+      {bottom:yC2,top:yFra1,index:6,color:'#b0a48d'}
     ],.15);
     const lower=rockMesh('近顶板有限垮落块体',cavingCells);
     const fractured=rockMesh('贯穿厚度的裂隙带岩体',fractureCells);
@@ -61,10 +74,10 @@
       const mesh=new T.LineSegments(new T.BufferGeometry(),material);mesh.name=name;mesh.frustumCulled=false;guideGroup.add(mesh);
       guideDefs.push({mesh,levels,dashed});
     }
-    guide('垮落带上缘示意','#af573e',[[1.34,2]],true);
-    guide('裂隙带上缘示意','#a67b27',[[3.65,6]],true);
-    guide('弯曲带连续层理','#436f70',[[3.96,6],[4.65,7],[5.06,7],[5.73,8],[6.14,8]]);
-    guide('弯曲带初始层理参照','#8b989a',[[4.65,7]],true);
+    guide('垮落带上缘示意','#af573e',[[yCav,2]],true);
+    guide('裂隙带上缘示意','#a67b27',[[yFra1,6]],true);
+    guide('弯曲带连续层理','#436f70',[[band(.08),7],[band(.24),7],[band(.40),8],[band(.56),8],[band(.72),8]]);
+    guide('弯曲带初始层理参照','#8b989a',[[band(.24),7]],true);
     let stats={localizedBlocks:0,openedFractureCells:0,maxCrackWidth:0};
     const rotated=new T.Vector3(),rotation=new T.Euler(),matrix=new T.Matrix4(),color=new T.Color();
     function writeCell(mesh,cell,i,points,amount){
@@ -87,7 +100,7 @@
         // 架后下落、转动和堆积；每排完整包络受底板及上覆裂隙层约束。
         let minY=Math.min(...points.map(p=>p.y)),maxY=Math.max(...points.map(p=>p.y));
         const envelope=fieldRange(cell.x+Math.min(...points.map(p=>p.x)),cell.x+Math.max(...points.map(p=>p.x)),2).min;
-        const floor=.46*(1-broken)+.025*broken,ceiling=1.34+envelope-.012*broken;
+        const floor=yCoalTop*(1-broken)+.025*broken,ceiling=yCav+envelope-.012*broken;
         const slot=(ceiling-floor)/3,allowed=slot*(1-.10*amount),fit=Math.min(1,allowed/(maxY-minY));
         points.forEach(p=>p.y*=fit);minY*=fit;maxY*=fit;
         const centerY=floor+slot*(cell.row+.5)-(minY+maxY)/2;
@@ -113,7 +126,7 @@
       for(const m of [lower,fractured]){m.geometry.attributes.position.needsUpdate=true;m.geometry.attributes.color.needsUpdate=true;m.geometry.computeVertexNormals();}
       for(const d of guideDefs){
         const pts=[],end=Math.min(1.8,state.face-1.55);
-        for(const z of [-1.662,1.662])for(const [y,index] of d.levels){
+        for(const z of [Z0+.012,Z1-.012])for(const [y,index] of d.levels){
           const initial=d.mesh.name==='弯曲带初始层理参照';
           for(let i=0;i<48;i++){
             const x=Math.min(-5+i*7/48,Math.max(-5,end)),X=Math.min(-5+(i+1)*7/48,Math.max(-5,end));
@@ -130,8 +143,8 @@
       return {...stats};
     }
     return {group,update,replacementLayerIndices,
-      getAnchors:()=>({caving:[-2.5,.56,1.72],fractured:[-2.5,2.3+displacement(-2.5,4),1.72],bending:[-2.5,5.2+displacement(-2.5,7),1.72]}),
-      diagnostics:()=>({...state,...stats,instanceCounts:{cavingBlocks:cavingCells.length,fractureBlocks:fractureCells.length},drawCalls:6,modelDepth:[-1.65,1.65],deterministic:true,
+      getAnchors:()=>({caving:[-2.5,Uf(6.9),1.72],fractured:[-2.5,Uf(50)+displacement(-2.5,4),1.72],bending:[-2.5,Uf(120)+displacement(-2.5,7),1.72]}),
+      diagnostics:()=>({...state,...stats,instanceCounts:{cavingBlocks:cavingCells.length,fractureBlocks:fractureCells.length},drawCalls:6,modelDepth:[Z0,Z1],deterministic:true,
         caveat:'传统三带的形态及范围示意，不是实测带高；近顶板局部垮落不等于目标层大范围垮落。'})};
   };
 })();
